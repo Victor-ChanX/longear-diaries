@@ -1,0 +1,6 @@
+.next
+node_modules
+public
+ai-frontend-kit
+package-lock.json
+Dockerfile

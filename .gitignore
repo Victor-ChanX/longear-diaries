@@ -1,0 +1,9 @@
+.next
+node_modules
+out
+dist
+.DS_Store
+*.tsbuildinfo
+.idea
+ai-frontend-kit
+/IMG_7988.jpg
