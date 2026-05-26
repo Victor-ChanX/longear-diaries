@@ -137,3 +137,6 @@ export const animalMarkers: AnimalMarker[] = [
     scientificName: "Canis lupus familiaris",
   },
 ];
+
+export const getAnimalById = (id: string) =>
+  animalMarkers.find((animal) => animal.id === id);

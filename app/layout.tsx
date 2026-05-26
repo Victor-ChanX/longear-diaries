@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
 
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
   description:
-    "A cobe Polaroids globe built with Next.js, Tailwind, and shadcn.",
-  title: "Longear Globe",
+    "LongEar Diaries — endangered animal field notes from a student-led storytelling project.",
+  title: "LongEar Diaries",
 };
 
 export const viewport: Viewport = {
@@ -22,7 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        <div className="site-shell">{children}</div>
+        <SiteFooter />
+      </body>
     </html>
   );
 }

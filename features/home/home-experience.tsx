@@ -1,14 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
-import { Info, MapPin } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { animalMarkers } from "@/lib/data/animals";
 
 import { AnimalDetailPanel, GlobePolaroids } from "./globe-polaroids";
-import { animalMarkers } from "./polaroid-data";
 
 export function HomeExperience() {
   const [selectedAnimal, setSelectedAnimal] = useState(animalMarkers[0]);
@@ -19,13 +20,12 @@ export function HomeExperience() {
       <section className="home-hero">
         <div className="home-copy">
           <Badge className="home-eyebrow" variant="secondary">
-            Endangered animal atlas
+            Species Globe
           </Badge>
           <h1>Endangered animal field notes.</h1>
           <p>
-            Click an animal photo on the globe to explore its location, habitat,
-            and conservation notes. Dog breeds are temporary placeholders for
-            future endangered species.
+            Spin the planet. Click any animal pinned to its native range to open
+            a profile with habitat, status, and the story behind why it matters.
           </p>
           <div className="home-actions">
             <Button
@@ -35,12 +35,12 @@ export function HomeExperience() {
               }}
             >
               <Info aria-hidden="true" />
-              View profile
+              View a profile
             </Button>
             <Button asChild variant="outline">
-              <a href="#nodes">
-                <MapPin aria-hidden="true" />
-                {animalMarkers.length} nodes
+              <a href="#introduction">
+                <ArrowRight aria-hidden="true" />
+                Read the intro
               </a>
             </Button>
           </div>
@@ -60,21 +60,46 @@ export function HomeExperience() {
           />
         )}
       </section>
-      <section className="nodes-band" id="nodes">
-        <div className="nodes-list" aria-label="Animal nodes">
-          {animalMarkers.map((marker) => (
-            <button
-              className={selectedAnimal.id === marker.id ? "is-selected" : ""}
-              key={marker.id}
-              onClick={() => {
-                setSelectedAnimal(marker);
-                setIsPanelOpen(true);
-              }}
-              type="button"
-            >
-              {marker.caption}
-            </button>
-          ))}
+
+      <section className="home-intro" id="introduction">
+        <div className="home-intro-inner">
+          <Badge className="home-eyebrow" variant="secondary">
+            Introduction
+          </Badge>
+          <h2>A diary of the long-eared, the lesser-known, the at-risk.</h2>
+          <div className="home-intro-grid">
+            <p>
+              LongEar Diaries is a student-led storytelling project documenting
+              endangered and overlooked animals around the world. Every entry
+              starts with a single creature&apos;s portrait — where it lives,
+              what threatens it, and the people working to protect it — then
+              gets shared across our RedNote and Instagram channels.
+            </p>
+            <p>
+              The Species Globe above is the cover of the diary. Each pin marks
+              a profile we&apos;ve published; spin the planet to discover them.
+              Below, on the Content page, you can browse the full catalogue, and
+              on Events you&apos;ll find our upcoming lecture, monthly
+              mini-comics, and community Q&amp;A.
+            </p>
+            <p>
+              We are not a fundraising charity. We are a bridge: pointing
+              attention, audiences, and curiosity toward the organisations
+              actually doing the conservation work. If a story here makes one
+              more person care about one more species, the diary did its job.
+            </p>
+          </div>
+          <div className="home-intro-actions">
+            <Button asChild>
+              <Link href="/content">
+                Browse the catalogue
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/about">Our story</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </main>
