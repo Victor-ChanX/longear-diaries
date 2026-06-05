@@ -2705,6 +2705,126 @@ canvas {
   width: 6rem;
 }
 
+/* ---------- Admin "Site content" index ---------- */
+
+.admin-section-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-section-card {
+  align-items: center;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  color: inherit;
+  display: flex;
+  gap: 1rem;
+  padding: 1.1rem 1.3rem;
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.admin-section-card:hover {
+  border-color: color-mix(in oklch, var(--primary) 35%, transparent);
+  box-shadow: var(--shadow-lift);
+}
+
+.admin-section-icon {
+  align-items: center;
+  background: color-mix(in oklch, var(--secondary) 50%, transparent);
+  border-radius: 999px;
+  color: var(--secondary-foreground);
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 2.6rem;
+  justify-content: center;
+  width: 2.6rem;
+}
+
+.admin-section-card h2 {
+  color: var(--foreground);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.admin-section-card p {
+  color: var(--muted-foreground);
+  font-size: 0.88rem;
+  margin-top: 0.15rem;
+}
+
+.admin-section-arrow {
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+  height: 1.1rem;
+  margin-left: auto;
+  width: 1.1rem;
+}
+
+/* ---------- Admin form fieldsets (site content forms) ---------- */
+
+.admin-fieldset {
+  background: oklch(0.985 0.008 80);
+  border: 1px solid color-mix(in oklch, var(--border) 65%, transparent);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.25rem 1.4rem 1.5rem;
+}
+
+.admin-fieldset legend {
+  display: block;
+  margin-left: -0.3rem;
+  padding: 0 0.3rem;
+}
+
+.admin-fieldset-title {
+  color: var(--foreground);
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.admin-fieldset-desc {
+  color: var(--muted-foreground);
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.admin-fieldset-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.admin-form-sub {
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem 1.15rem;
+}
+
+.admin-form-sub-title {
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 /* ---------- Login ---------- */
 
 .admin-login-shell {

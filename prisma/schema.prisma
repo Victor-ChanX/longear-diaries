@@ -37,3 +37,11 @@ model Animal {
   @@index([sortOrder])
   @@map("animals")
 }
+
+model SiteContent {
+  key       String   @id // "home" | "about" | "events" | "contact"
+  data      Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_content")
+}

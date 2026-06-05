@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { LayoutDashboard, LogOut, PawPrint, Users } from "lucide-react";
+import {
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  PawPrint,
+  Users,
+} from "lucide-react";
 
 import { logoutAction } from "@/app/admin/logout/actions";
 import { cn } from "@/lib/utils";
@@ -12,6 +18,7 @@ const NAV = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/animals", icon: PawPrint, label: "Animals" },
   { href: "/admin/volunteers", icon: Users, label: "Volunteers" },
+  { href: "/admin/site", icon: FileText, label: "Site content" },
 ];
 
 type AdminSidebarProps = {

@@ -7,35 +7,18 @@ import { ArrowRight, BookOpen, Info, Sparkles, Sprout } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { AnimalMarker } from "@/lib/data/animals";
+import type { HomeContent } from "@/lib/data/site-defaults";
 
 import { AnimalDetailPanel, GlobePolaroids } from "./globe-polaroids";
 
 type HomeExperienceProps = {
   animals: AnimalMarker[];
+  content: HomeContent;
 };
 
-const VALUES = [
-  {
-    body: "We publish one careful, single-species profile at a time — habitat, threats, and the story behind why it matters. Reach is a side effect.",
-    icon: BookOpen,
-    kicker: "Method",
-    title: "Story-first, not scroll-first",
-  },
-  {
-    body: "We point readers toward the conservation organisations doing the work on the ground. The diary is a bridge, never a fundraiser.",
-    icon: Sprout,
-    kicker: "Mission",
-    title: "A bridge to the field",
-  },
-  {
-    body: "Built by a small student team learning conservation by doing — design, research, writing, illustration, and engineering.",
-    icon: Sparkles,
-    kicker: "People",
-    title: "Student-led, peer-reviewed",
-  },
-];
+const VALUE_ICONS = [BookOpen, Sprout, Sparkles] as const;
 
-export function HomeExperience({ animals }: HomeExperienceProps) {
+export function HomeExperience({ animals, content }: HomeExperienceProps) {
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalMarker | null>(
     animals[0] ?? null,
   );
@@ -48,32 +31,30 @@ export function HomeExperience({ animals }: HomeExperienceProps) {
 
   const featured = animals[0] ?? null;
   const dispatches = animals.slice(0, 4);
+  const c = content;
 
   return (
     <main className="home-root">
       {/* ===== HERO ===== */}
       <section className="home-hero">
         <div className="home-copy">
-          <p className="eyebrow home-eyebrow">Species Globe · Issue 01</p>
+          <p className="eyebrow home-eyebrow">{c.hero.eyebrow}</p>
           <h1>
-            Field notes from <em>the edge</em> of disappearance.
+            {c.hero.titlePre} <em>{c.hero.titleEmphasis}</em> {c.hero.titlePost}
           </h1>
-          <p>
-            Spin the planet. Click any animal pinned to its native range to open
-            a profile with habitat, status, and the story behind why it matters.
-          </p>
+          <p>{c.hero.body}</p>
           <div className="home-actions">
             <Button
               disabled={animals.length === 0}
               onClick={() => featured && openProfile(featured)}
             >
               <Info aria-hidden="true" />
-              Open the first entry
+              {c.hero.ctaPrimary}
             </Button>
             <Button asChild variant="outline">
               <a href="#manifesto">
                 <ArrowRight aria-hidden="true" />
-                Read the manifesto
+                {c.hero.ctaSecondary}
               </a>
             </Button>
           </div>
@@ -95,14 +76,10 @@ export function HomeExperience({ animals }: HomeExperienceProps) {
       {/* ===== MANIFESTO ===== */}
       <section className="home-manifesto" id="manifesto">
         <div className="home-manifesto-inner">
-          <p className="eyebrow">Manifesto</p>
-          <blockquote>
-            We don&apos;t fundraise. We don&apos;t broker donations. We sit with
-            one animal at a time and write it down — carefully, slowly — then
-            point at the people doing the saving.
-          </blockquote>
+          <p className="eyebrow">{c.manifesto.eyebrow}</p>
+          <blockquote>{c.manifesto.quote}</blockquote>
           <p className="home-manifesto-attribution">
-            — The editors of LongEar Diaries
+            {c.manifesto.attribution}
           </p>
         </div>
       </section>
@@ -111,15 +88,19 @@ export function HomeExperience({ animals }: HomeExperienceProps) {
       <section className="home-stats" aria-label="At a glance">
         <div className="home-stats-inner">
           <Stat
-            label="Species profiled"
+            label={c.stats.item1Label}
             number={animals.length.toString().padStart(2, "0")}
           />
-          <Stat label="Issues per month" number="01" suffix="issue" />
-          <Stat label="Mini-comics dropped" number="∞" />
           <Stat
-            label="Donation forms here"
-            number="0"
-            suffix="we're a bridge"
+            label={c.stats.item2Label}
+            number={c.stats.item2Number}
+            suffix={c.stats.item2Suffix}
+          />
+          <Stat label={c.stats.item3Label} number={c.stats.item3Number} />
+          <Stat
+            label={c.stats.item4Label}
+            number={c.stats.item4Number}
+            suffix={c.stats.item4Suffix}
           />
         </div>
       </section>
@@ -184,15 +165,15 @@ export function HomeExperience({ animals }: HomeExperienceProps) {
       <section className="home-values" aria-label="Mission values">
         <div className="home-values-inner">
           <header className="home-values-header">
-            <p className="eyebrow">How we work</p>
-            <h2>Three rules, kept honestly.</h2>
+            <p className="eyebrow">{c.values.eyebrow}</p>
+            <h2>{c.values.title}</h2>
           </header>
           <div className="home-values-grid">
-            {VALUES.map((value, i) => {
-              const Icon = value.icon;
+            {c.values.items.slice(0, 3).map((value, i) => {
+              const Icon = VALUE_ICONS[i] ?? BookOpen;
 
               return (
-                <article className="home-value" key={value.kicker}>
+                <article className="home-value" key={`${value.kicker}-${i}`}>
                   <span className="home-value-number">
                     {(i + 1).toString().padStart(2, "0")}
                   </span>
@@ -266,21 +247,18 @@ export function HomeExperience({ animals }: HomeExperienceProps) {
       {/* ===== CTA BAND ===== */}
       <section className="home-cta" aria-label="Call to action">
         <div className="home-cta-inner">
-          <p className="eyebrow eyebrow-on-dark">Start anywhere</p>
-          <h2>Pick a species. Read its story. Pass it on.</h2>
-          <p>
-            That&apos;s the whole loop. Every share, every conversation, every
-            quiet read counts as conservation reach.
-          </p>
+          <p className="eyebrow eyebrow-on-dark">{c.cta.eyebrow}</p>
+          <h2>{c.cta.title}</h2>
+          <p>{c.cta.body}</p>
           <div className="home-cta-actions">
             <Button asChild>
               <Link href="/content">
-                Browse the catalogue
+                {c.cta.primaryLabel}
                 <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/contact">Send a Q&amp;A question</Link>
+              <Link href="/contact">{c.cta.secondaryLabel}</Link>
             </Button>
           </div>
         </div>
