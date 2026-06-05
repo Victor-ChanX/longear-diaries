@@ -22,30 +22,26 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Next.js standalone server bundle (includes only the runtime imports of
-# @prisma/client, not the prisma CLI used for migrations).
+# Public assets + Next.js standalone server entry.
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Prisma CLI + engines + schema + migrations, copied separately so we can run
-# `prisma migrate deploy` at container start. These aren't pulled in by Next's
-# tracer because they're build/release tools, not runtime imports.
-# We deliberately skip node_modules/.bin/prisma because cross-stage COPY
-# resolves the symlink into a flat file whose internal __dirname-relative
-# WASM lookups then break. Invoking node_modules/prisma/build/index.js
-# directly avoids that.
+# Full node_modules from builder (overwrites the traced subset that the
+# standalone output ships with). We need the Prisma CLI and ALL of its
+# transitive deps (effect, etc.) at runtime to run `migrate deploy`, and
+# cherry-picking specific packages is too fragile across Prisma versions.
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# Prisma schema + migration SQL + Prisma 7 config (not part of node_modules).
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/dotenv ./node_modules/dotenv
 
 USER nextjs
 
 EXPOSE 3000
 
-# Apply pending migrations, then start the Next.js server. If migrations fail
-# (e.g. DB not yet reachable) the server still starts so the table-missing
-# fallback can render defaults instead of 500ing.
+# Apply pending migrations, then start the Next.js server. Migration failure
+# (e.g. DB not yet reachable) falls through to server start so the
+# table-missing fallback can render default content.
 CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy || echo 'WARNING: prisma migrate deploy failed, continuing'; node server.js"]
