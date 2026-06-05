@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Badge } from "@/components/ui/badge";
 import { AnimalGrid } from "@/features/content/animal-grid";
 import { listAnimals } from "@/lib/storage/animals";
 
@@ -18,7 +17,7 @@ export default async function ContentPage() {
   return (
     <main className="page-shell">
       <header className="page-hero">
-        <Badge variant="secondary">Content</Badge>
+        <p className="eyebrow">Content</p>
         <h1>Animal profiles, one species at a time.</h1>
         <p>
           Each card below corresponds to a story we&apos;ve published — and

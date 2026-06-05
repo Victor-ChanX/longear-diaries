@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Badge } from "@/components/ui/badge";
 import { TeamGrid } from "@/features/leadership/team-grid";
 
 // Read fresh from disk on every request — admin updates show immediately.
@@ -16,7 +15,7 @@ export default function LeadershipPage() {
   return (
     <main className="page-shell">
       <header className="page-hero">
-        <Badge variant="secondary">Leadership</Badge>
+        <p className="eyebrow">Leadership</p>
         <h1>The people running the diary.</h1>
         <p>
           The students who write, illustrate, research, and ship every entry.

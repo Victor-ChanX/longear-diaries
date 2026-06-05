@@ -7,10 +7,22 @@ export function SiteFooter() {
         <div>
           <p className="site-footer-brand">LongEar Diaries</p>
           <p className="site-footer-tagline">
-            Field notes from the front lines of biodiversity.
+            A student-led field diary for endangered and overlooked species.
+            We&apos;re a bridge to the organisations doing the conservation
+            work, never a fundraiser.
           </p>
         </div>
-        <nav aria-label="Social and contact" className="site-footer-nav">
+
+        <nav aria-label="Explore" className="site-footer-nav">
+          <span className="site-footer-nav-label">Explore</span>
+          <Link href="/content">Animal catalogue</Link>
+          <Link href="/events">Events &amp; comics</Link>
+          <Link href="/leadership">Leadership</Link>
+          <Link href="/about">Our story</Link>
+        </nav>
+
+        <nav aria-label="Reach us" className="site-footer-nav">
+          <span className="site-footer-nav-label">Reach us</span>
           <a
             href="https://www.xiaohongshu.com/"
             rel="noopener noreferrer"
@@ -25,11 +37,11 @@ export function SiteFooter() {
           >
             Instagram
           </a>
-          <Link href="/contact">Contact</Link>
+          <Link href="/contact">Email &amp; Q&amp;A</Link>
         </nav>
       </div>
       <p className="site-footer-meta">
-        &copy; 2025 LongEar Diaries. Built as a bridge for endangered species
+        &copy; 2025 LongEar Diaries · Built as a bridge for endangered species
         storytelling.
       </p>
     </footer>

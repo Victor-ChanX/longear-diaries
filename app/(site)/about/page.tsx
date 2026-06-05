@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { Badge } from "@/components/ui/badge";
-
 export const metadata: Metadata = {
   description: "The story, the name, and the mission behind LongEar Diaries.",
   title: "About — LongEar Diaries",
@@ -11,7 +9,7 @@ export default function AboutPage() {
   return (
     <main className="page-shell">
       <header className="page-hero">
-        <Badge variant="secondary">About</Badge>
+        <p className="eyebrow">About</p>
         <h1>Why we started a diary for endangered animals.</h1>
         <p>
           A short version of where the project came from, what the name means,

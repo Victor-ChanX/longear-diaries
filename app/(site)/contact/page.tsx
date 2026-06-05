@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 
 import { AtSign, Camera, MessageSquareHeart } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-
 export const metadata: Metadata = {
   description:
     "Get in touch with LongEar Diaries on RedNote, Instagram, or email for our community Q&A.",
@@ -44,7 +42,7 @@ export default function ContactPage() {
   return (
     <main className="page-shell">
       <header className="page-hero">
-        <Badge variant="secondary">Contact</Badge>
+        <p className="eyebrow">Contact</p>
         <h1>Reach the diary.</h1>
         <p>
           DMs on RedNote and Instagram are open. Email is the best place to send

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
+import { ArrowRight } from "lucide-react";
+
 import type { AnimalMarker } from "@/lib/data/animals";
 
 export function AnimalGrid({ animals }: { animals: AnimalMarker[] }) {
@@ -13,43 +14,77 @@ export function AnimalGrid({ animals }: { animals: AnimalMarker[] }) {
     );
   }
 
+  const [hero, ...rest] = animals;
+
   return (
-    <ul className="animal-grid" role="list">
-      {animals.map((animal) => (
-        <li key={animal.id}>
-          <Link className="animal-card" href={`/content/${animal.id}`}>
-            {animal.image ? (
-              <div
-                aria-hidden="true"
-                className="animal-card-media"
-                style={{
-                  backgroundImage: `url(${animal.image})`,
-                  backgroundPosition: animal.objectPosition,
-                }}
-              />
-            ) : (
-              <div
-                aria-hidden="true"
-                className="animal-card-media animal-image-placeholder"
-              >
-                {animal.caption.charAt(0).toUpperCase() || "?"}
-              </div>
-            )}
-            <div className="animal-card-body">
-              <div className="animal-card-kicker">
-                <Badge variant="secondary">{animal.conservationStatus}</Badge>
-                <span>{animal.origin}</span>
-              </div>
-              <h3>{animal.caption}</h3>
-              <p className="animal-card-science">{animal.scientificName}</p>
-              <p className="animal-card-desc">{animal.description}</p>
-              <p className="animal-card-habitat">
-                <strong>Habitat.</strong> {animal.habitat}
-              </p>
-            </div>
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <div className="catalogue">
+      <Link className="catalogue-hero" href={`/content/${hero.id}`}>
+        {hero.image ? (
+          <div
+            aria-hidden="true"
+            className="catalogue-hero-media"
+            style={{
+              backgroundImage: `url(${hero.image})`,
+              backgroundPosition: hero.objectPosition,
+            }}
+          />
+        ) : (
+          <div
+            aria-hidden="true"
+            className="catalogue-hero-media animal-image-placeholder"
+          >
+            {hero.caption.charAt(0).toUpperCase() || "?"}
+          </div>
+        )}
+        <div className="catalogue-hero-body">
+          <p className="eyebrow">Latest entry</p>
+          <h2>{hero.caption}</h2>
+          <p className="catalogue-hero-science">{hero.scientificName}</p>
+          <p className="catalogue-hero-desc">{hero.description}</p>
+          <span className="catalogue-hero-link">
+            Read the entry <ArrowRight aria-hidden="true" />
+          </span>
+        </div>
+      </Link>
+
+      {rest.length > 0 && (
+        <ul className="catalogue-grid" role="list">
+          {rest.map((animal, i) => (
+            <li key={animal.id}>
+              <Link className="catalogue-card" href={`/content/${animal.id}`}>
+                <span className="catalogue-card-number">
+                  {(i + 2).toString().padStart(2, "0")}
+                </span>
+                {animal.image ? (
+                  <div
+                    aria-hidden="true"
+                    className="catalogue-card-media"
+                    style={{
+                      backgroundImage: `url(${animal.image})`,
+                      backgroundPosition: animal.objectPosition,
+                    }}
+                  />
+                ) : (
+                  <div
+                    aria-hidden="true"
+                    className="catalogue-card-media animal-image-placeholder"
+                  >
+                    {animal.caption.charAt(0).toUpperCase() || "?"}
+                  </div>
+                )}
+                <div className="catalogue-card-body">
+                  <p className="dispatch-kicker">{animal.origin}</p>
+                  <h3>{animal.caption}</h3>
+                  <p className="catalogue-card-science">
+                    {animal.scientificName}
+                  </p>
+                  <p className="catalogue-card-desc">{animal.description}</p>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

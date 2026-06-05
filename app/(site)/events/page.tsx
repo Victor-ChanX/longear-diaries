@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Badge } from "@/components/ui/badge";
 import { EventCards } from "@/features/events/event-cards";
 
 export const metadata: Metadata = {
@@ -13,7 +12,7 @@ export default function EventsPage() {
   return (
     <main className="page-shell">
       <header className="page-hero">
-        <Badge variant="secondary">Events</Badge>
+        <p className="eyebrow">Events</p>
         <h1>Live talks, Q&amp;As, comics, and ways to get involved.</h1>
         <p>
           Everything below runs out of the same diary — only the format changes.
