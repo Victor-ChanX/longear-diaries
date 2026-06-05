@@ -14,12 +14,28 @@ const createClient = (): PrismaClient => {
 
   return new PrismaClient({
     adapter: new PrismaPg({ connectionString: url }),
-    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    log:
+      process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 };
 
-export const prisma = globalForPrisma.prisma ?? createClient();
+// Lazy proxy — `next build` evaluates page modules to collect config; if we
+// instantiated Prisma at module load it would throw when DATABASE_URL is
+// absent inside the build container. The client is only created the first
+// time a property is accessed (i.e. at request time).
+const getClient = (): PrismaClient => {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createClient();
+  }
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+  return globalForPrisma.prisma;
+};
+
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop: string | symbol) {
+    const client = getClient() as unknown as Record<string | symbol, unknown>;
+    const value = client[prop];
+
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+}) as PrismaClient;
