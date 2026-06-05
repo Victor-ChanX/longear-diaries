@@ -44,4 +44,14 @@ EXPOSE 3000
 # Apply pending migrations, then start the Next.js server. Migration failure
 # (e.g. DB not yet reachable) falls through to server start so the
 # table-missing fallback can render default content.
-CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy || echo 'WARNING: prisma migrate deploy failed, continuing'; node server.js"]
+CMD ["sh", "-c", "\
+  echo '--- prisma migrate deploy ---'; \
+  echo \"DATABASE_URL is ${DATABASE_URL:+set}${DATABASE_URL:-NOT SET}\"; \
+  node node_modules/prisma/build/index.js migrate deploy 2>&1; \
+  STATUS=$?; \
+  if [ $STATUS -ne 0 ]; then \
+    echo \"--- migrate deploy exited with $STATUS, continuing anyway ---\"; \
+  fi; \
+  echo '--- starting Next.js ---'; \
+  exec node server.js \
+"]
