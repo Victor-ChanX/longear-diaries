@@ -1,32 +1,32 @@
-"use client";
+import { getAvatarUrl, listVolunteers } from "@/lib/storage/volunteers";
 
-import { Badge } from "@/components/ui/badge";
+export async function TeamGrid() {
+  const volunteers = await listVolunteers();
 
-import { teamMembers } from "./data";
+  if (volunteers.length === 0) {
+    return (
+      <div className="team-empty">
+        <p>
+          No profiles have been added yet. Once the team posts profiles through
+          the admin panel, they&apos;ll appear here.
+        </p>
+      </div>
+    );
+  }
 
-export function TeamGrid() {
   return (
     <ul className="team-grid" role="list">
-      {teamMembers.map((member) => (
+      {volunteers.map((member) => (
         <li className="team-card" key={member.id}>
-          <div className="team-card-media">
+          <div className="team-card-avatar">
             <img
               alt={`${member.name} portrait`}
               loading="lazy"
-              onError={(event) => {
-                const img = event.currentTarget;
-                img.src = "/IMG_7988.jpg";
-                img.style.objectPosition = "center";
-              }}
-              src={member.image}
+              src={getAvatarUrl(member.avatarKey)}
             />
           </div>
-          <div className="team-card-body">
-            {member.isLead && <Badge variant="secondary">Team lead</Badge>}
-            <h3>{member.name}</h3>
-            <p className="team-card-role">{member.role}</p>
-            <p className="team-card-bio">{member.bio}</p>
-          </div>
+          <h3>{member.name}</h3>
+          <p className="team-card-bio">{member.bio}</p>
         </li>
       ))}
     </ul>

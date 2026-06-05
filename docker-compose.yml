@@ -12,3 +12,21 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: longear-postgres
+    environment:
+      POSTGRES_USER: longear
+      POSTGRES_PASSWORD: longear-dev-password
+      POSTGRES_DB: longear
+    ports:
+      - "5432:5432"
+    volumes:
+      - longear-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  longear-postgres-data:

@@ -7,3 +7,11 @@ dist
 .idea
 ai-frontend-kit
 /IMG_7988.jpg
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Local admin data (JSON-file storage)
+/data

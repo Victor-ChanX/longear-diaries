@@ -4,12 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import Globe, { type GlobeMethods } from "react-globe.gl";
 
-import { animalMarkers, type AnimalMarker } from "@/lib/data/animals";
+import { type AnimalMarker } from "@/lib/data/animals";
 
 type GlobeStageProps = {
+  animals: AnimalMarker[];
   isProfileOpen: boolean;
   onSelectAnimal: (animal: AnimalMarker) => void;
-  selectedAnimal: AnimalMarker;
+  selectedAnimal: AnimalMarker | null;
 };
 
 type MarkerDatum = AnimalMarker & { lat: number; lng: number };
@@ -26,6 +27,7 @@ const getStageSize = (element: HTMLElement | null) => {
 };
 
 export default function GlobeStage({
+  animals,
   isProfileOpen,
   onSelectAnimal,
   selectedAnimal,
@@ -57,12 +59,12 @@ export default function GlobeStage({
 
   const markerData = useMemo<MarkerDatum[]>(
     () =>
-      animalMarkers.map((animal) => ({
+      animals.map((animal) => ({
         ...animal,
         lat: animal.location[0],
         lng: animal.location[1],
       })),
-    [],
+    [animals],
   );
 
   useEffect(() => {
@@ -93,19 +95,29 @@ export default function GlobeStage({
     card.type = "button";
     card.className = "globe-marker";
     card.setAttribute("aria-label", `Open profile for ${datum.caption}`);
-    if (selectedAnimal.id === datum.id) {
+    if (selectedAnimal?.id === datum.id) {
       card.classList.add("is-selected");
     }
 
     card.style.setProperty("--photo-position", datum.objectPosition);
     card.style.setProperty("--polaroid-rotate", `${datum.rotate}deg`);
 
-    const img = document.createElement("img");
-    img.src = datum.image;
-    img.alt = "";
-    card.appendChild(img);
+    if (datum.image) {
+      const img = document.createElement("img");
+
+      img.src = datum.image;
+      img.alt = "";
+      card.appendChild(img);
+    } else {
+      const placeholder = document.createElement("div");
+
+      placeholder.className = "globe-marker-placeholder";
+      placeholder.textContent = datum.caption.charAt(0).toUpperCase() || "?";
+      card.appendChild(placeholder);
+    }
 
     const label = document.createElement("span");
+
     label.textContent = datum.caption;
     card.appendChild(label);
 

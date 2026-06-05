@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from "next";
 
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
-
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,12 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <SiteHeader />
-        <div className="site-shell">{children}</div>
-        <SiteFooter />
-      </body>
+    <html data-scroll-behavior="smooth" lang="en" suppressHydrationWarning>
+      <body>{children}</body>
     </html>
   );
 }

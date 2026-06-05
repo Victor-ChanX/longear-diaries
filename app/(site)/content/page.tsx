@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { AnimalGrid } from "@/features/content/animal-grid";
+import { listAnimals } from "@/lib/storage/animals";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   description:
@@ -9,7 +12,9 @@ export const metadata: Metadata = {
   title: "Content — LongEar Diaries",
 };
 
-export default function ContentPage() {
+export default async function ContentPage() {
+  const animals = await listAnimals();
+
   return (
     <main className="page-shell">
       <header className="page-hero">
@@ -20,7 +25,7 @@ export default function ContentPage() {
           mirrored on RedNote and Instagram. Tap a card for the full field note.
         </p>
       </header>
-      <AnimalGrid />
+      <AnimalGrid animals={animals} />
     </main>
   );
 }

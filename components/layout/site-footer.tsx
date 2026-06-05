@@ -29,8 +29,8 @@ export function SiteFooter() {
         </nav>
       </div>
       <p className="site-footer-meta">
-        &copy; {new Date().getFullYear()} LongEar Diaries. Built as a bridge for
-        endangered species storytelling.
+        &copy; 2025 LongEar Diaries. Built as a bridge for endangered species
+        storytelling.
       </p>
     </footer>
   );

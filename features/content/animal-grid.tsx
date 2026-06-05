@@ -1,22 +1,40 @@
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { animalMarkers } from "@/lib/data/animals";
+import type { AnimalMarker } from "@/lib/data/animals";
 
-export function AnimalGrid() {
+export function AnimalGrid({ animals }: { animals: AnimalMarker[] }) {
+  if (animals.length === 0) {
+    return (
+      <p className="team-empty">
+        No animals have been added yet. Once admins publish profiles in the
+        admin panel, they&apos;ll appear here.
+      </p>
+    );
+  }
+
   return (
     <ul className="animal-grid" role="list">
-      {animalMarkers.map((animal) => (
+      {animals.map((animal) => (
         <li key={animal.id}>
           <Link className="animal-card" href={`/content/${animal.id}`}>
-            <div
-              className="animal-card-media"
-              style={{
-                backgroundImage: `url(${animal.image})`,
-                backgroundPosition: animal.objectPosition,
-              }}
-              aria-hidden="true"
-            />
+            {animal.image ? (
+              <div
+                aria-hidden="true"
+                className="animal-card-media"
+                style={{
+                  backgroundImage: `url(${animal.image})`,
+                  backgroundPosition: animal.objectPosition,
+                }}
+              />
+            ) : (
+              <div
+                aria-hidden="true"
+                className="animal-card-media animal-image-placeholder"
+              >
+                {animal.caption.charAt(0).toUpperCase() || "?"}
+              </div>
+            )}
             <div className="animal-card-body">
               <div className="animal-card-kicker">
                 <Badge variant="secondary">{animal.conservationStatus}</Badge>

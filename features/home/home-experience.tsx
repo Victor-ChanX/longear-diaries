@@ -7,13 +7,25 @@ import { ArrowRight, Info } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { animalMarkers } from "@/lib/data/animals";
+import type { AnimalMarker } from "@/lib/data/animals";
 
 import { AnimalDetailPanel, GlobePolaroids } from "./globe-polaroids";
 
-export function HomeExperience() {
-  const [selectedAnimal, setSelectedAnimal] = useState(animalMarkers[0]);
+type HomeExperienceProps = {
+  animals: AnimalMarker[];
+};
+
+export function HomeExperience({ animals }: HomeExperienceProps) {
+  const [selectedAnimal, setSelectedAnimal] = useState<AnimalMarker | null>(
+    animals[0] ?? null,
+  );
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  const openFirst = () => {
+    if (animals.length === 0) return;
+    setSelectedAnimal(animals[0]);
+    setIsPanelOpen(true);
+  };
 
   return (
     <main className="min-h-dvh overflow-hidden bg-background text-foreground">
@@ -28,12 +40,7 @@ export function HomeExperience() {
             a profile with habitat, status, and the story behind why it matters.
           </p>
           <div className="home-actions">
-            <Button
-              onClick={() => {
-                setSelectedAnimal(animalMarkers[0]);
-                setIsPanelOpen(true);
-              }}
-            >
+            <Button disabled={animals.length === 0} onClick={openFirst}>
               <Info aria-hidden="true" />
               View a profile
             </Button>
@@ -46,6 +53,7 @@ export function HomeExperience() {
           </div>
         </div>
         <GlobePolaroids
+          animals={animals}
           isProfileOpen={isPanelOpen}
           onSelectAnimal={(animal) => {
             setSelectedAnimal(animal);
@@ -53,7 +61,7 @@ export function HomeExperience() {
           }}
           selectedAnimal={selectedAnimal}
         />
-        {isPanelOpen && (
+        {isPanelOpen && selectedAnimal && (
           <AnimalDetailPanel
             animal={selectedAnimal}
             onClose={() => setIsPanelOpen(false)}

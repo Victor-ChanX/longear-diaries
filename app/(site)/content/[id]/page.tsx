@@ -6,11 +6,9 @@ import { ArrowLeft } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { animalMarkers, getAnimalById } from "@/lib/data/animals";
+import { getAnimalById } from "@/lib/storage/animals";
 
-export function generateStaticParams() {
-  return animalMarkers.map((animal) => ({ id: animal.id }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -18,7 +16,8 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const animal = getAnimalById(id);
+  const animal = await getAnimalById(id);
+
   if (!animal) return { title: "Not found — LongEar Diaries" };
 
   return {
@@ -33,7 +32,8 @@ export default async function AnimalPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const animal = getAnimalById(id);
+  const animal = await getAnimalById(id);
+
   if (!animal) notFound();
 
   return (
@@ -45,14 +45,23 @@ export default async function AnimalPage({
         </Link>
       </Button>
       <article className="animal-detail-card">
-        <div
-          className="animal-detail-media"
-          style={{
-            backgroundImage: `url(${animal.image})`,
-            backgroundPosition: animal.objectPosition,
-          }}
-          aria-hidden="true"
-        />
+        {animal.image ? (
+          <div
+            aria-hidden="true"
+            className="animal-detail-media"
+            style={{
+              backgroundImage: `url(${animal.image})`,
+              backgroundPosition: animal.objectPosition,
+            }}
+          />
+        ) : (
+          <div
+            aria-hidden="true"
+            className="animal-detail-media animal-image-placeholder"
+          >
+            {animal.caption.charAt(0).toUpperCase() || "?"}
+          </div>
+        )}
         <div className="animal-detail-body">
           <div className="animal-panel-kicker">
             <Badge variant="secondary">{animal.conservationStatus}</Badge>

@@ -12,9 +12,10 @@ const GlobeStage = dynamic(() => import("./globe-stage"), {
 });
 
 type GlobePolaroidsProps = {
+  animals: AnimalMarker[];
   isProfileOpen: boolean;
   onSelectAnimal: (animal: AnimalMarker) => void;
-  selectedAnimal: AnimalMarker;
+  selectedAnimal: AnimalMarker | null;
 };
 
 export function GlobePolaroids(props: GlobePolaroidsProps) {
@@ -31,7 +32,13 @@ export function AnimalDetailPanel({
   return (
     <aside className="animal-panel" aria-live="polite">
       <div className="animal-panel-image">
-        <img alt={`${animal.caption} profile`} src={animal.image} />
+        {animal.image ? (
+          <img alt={`${animal.caption} profile`} src={animal.image} />
+        ) : (
+          <div aria-hidden="true" className="animal-image-placeholder">
+            {animal.caption.charAt(0).toUpperCase() || "?"}
+          </div>
+        )}
       </div>
       <div className="animal-panel-body">
         <div className="animal-panel-kicker">
