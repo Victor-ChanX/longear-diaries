@@ -19,10 +19,28 @@ const DEFAULTS: Record<SectionKey, unknown> = {
   home: DEFAULT_HOME_CONTENT,
 };
 
-async function getSection<T>(key: SectionKey): Promise<T> {
-  const row = await prisma.siteContent.findUnique({ where: { key } });
+// Prisma "P2021 TableDoesNotExist" — happens when migrations haven't been
+// applied yet (e.g. first deploy). Treat it the same as "no row found" so the
+// public site keeps rendering with default content.
+const isMissingTableError = (error: unknown): boolean => {
+  if (typeof error !== "object" || error === null) return false;
+  const code = (error as { code?: string }).code;
 
-  return (row?.data as T) ?? (DEFAULTS[key] as T);
+  return code === "P2021" || code === "P2022";
+};
+
+async function getSection<T>(key: SectionKey): Promise<T> {
+  try {
+    const row = await prisma.siteContent.findUnique({ where: { key } });
+
+    return (row?.data as T) ?? (DEFAULTS[key] as T);
+  } catch (error) {
+    if (isMissingTableError(error)) {
+      return DEFAULTS[key] as T;
+    }
+
+    throw error;
+  }
 }
 
 export const getHomeContent = () => getSection<HomeContent>("home");

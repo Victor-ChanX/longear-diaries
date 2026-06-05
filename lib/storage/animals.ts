@@ -5,6 +5,15 @@ import { prisma } from "@/lib/db/prisma";
 
 import { deleteObject, getPublicUrl, putObject } from "./r2";
 
+// Prisma error code for "table does not exist" — happens before migrations
+// are applied. Treat read calls as empty so the public site stays up.
+const isMissingTable = (error: unknown): boolean => {
+  if (typeof error !== "object" || error === null) return false;
+  const code = (error as { code?: string }).code;
+
+  return code === "P2021" || code === "P2022";
+};
+
 const toMarker = (row: Animal): AnimalMarker => ({
   caption: row.caption,
   conservationStatus: row.conservationStatus,
@@ -21,27 +30,47 @@ const toMarker = (row: Animal): AnimalMarker => ({
 });
 
 export async function listAnimals(): Promise<AnimalMarker[]> {
-  const rows = await prisma.animal.findMany({
-    orderBy: [{ sortOrder: "asc" }, { caption: "asc" }],
-  });
+  try {
+    const rows = await prisma.animal.findMany({
+      orderBy: [{ sortOrder: "asc" }, { caption: "asc" }],
+    });
 
-  return rows.map(toMarker);
+    return rows.map(toMarker);
+  } catch (error) {
+    if (isMissingTable(error)) return [];
+    throw error;
+  }
 }
 
 export async function getAnimalById(id: string): Promise<AnimalMarker | null> {
-  const row = await prisma.animal.findUnique({ where: { id } });
+  try {
+    const row = await prisma.animal.findUnique({ where: { id } });
 
-  return row ? toMarker(row) : null;
+    return row ? toMarker(row) : null;
+  } catch (error) {
+    if (isMissingTable(error)) return null;
+    throw error;
+  }
 }
 
 export async function listAnimalsRaw(): Promise<Animal[]> {
-  return prisma.animal.findMany({
-    orderBy: [{ sortOrder: "asc" }, { caption: "asc" }],
-  });
+  try {
+    return await prisma.animal.findMany({
+      orderBy: [{ sortOrder: "asc" }, { caption: "asc" }],
+    });
+  } catch (error) {
+    if (isMissingTable(error)) return [];
+    throw error;
+  }
 }
 
 export async function getAnimalRaw(id: string): Promise<Animal | null> {
-  return prisma.animal.findUnique({ where: { id } });
+  try {
+    return await prisma.animal.findUnique({ where: { id } });
+  } catch (error) {
+    if (isMissingTable(error)) return null;
+    throw error;
+  }
 }
 
 const EXT_BY_MIME: Record<string, string> = {

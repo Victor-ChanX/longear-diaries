@@ -12,18 +12,30 @@ export type VolunteerRecord = {
   name: string;
 };
 
-export async function listVolunteers(): Promise<VolunteerRecord[]> {
-  const rows = await prisma.volunteer.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+const isMissingTable = (error: unknown): boolean => {
+  if (typeof error !== "object" || error === null) return false;
+  const code = (error as { code?: string }).code;
 
-  return rows.map((row) => ({
-    avatarKey: row.avatarKey,
-    bio: row.bio,
-    createdAt: row.createdAt.toISOString(),
-    id: row.id,
-    name: row.name,
-  }));
+  return code === "P2021" || code === "P2022";
+};
+
+export async function listVolunteers(): Promise<VolunteerRecord[]> {
+  try {
+    const rows = await prisma.volunteer.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+
+    return rows.map((row) => ({
+      avatarKey: row.avatarKey,
+      bio: row.bio,
+      createdAt: row.createdAt.toISOString(),
+      id: row.id,
+      name: row.name,
+    }));
+  } catch (error) {
+    if (isMissingTable(error)) return [];
+    throw error;
+  }
 }
 
 const EXT_BY_MIME: Record<string, string> = {
